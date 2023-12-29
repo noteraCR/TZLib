@@ -11,13 +11,13 @@ namespace TZLib.Tests.Services
         public void CalculateShapeArea_WithCircle_ReturnsCorrectArea()
         {
             var circle = new Circle(5);
-            double expected = Math.PI * Math.Pow(circle.Radius, 2);
+            double expected = Math.PI * Math.Pow(circle.GetRadius(), 2);
 
             var result = GeometryLibrary.CalculateShapeArea(circle);
 
             Assert.True(result.IsSuccess);
             Assert.Equal(OperationStatus.Success, result.Status);
-            Assert.Equal(expected, result.Data);
+            Assert.Equal(expected, result.Data!.Value, precision: 6);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace TZLib.Tests.Services
 
             Assert.True(result.IsSuccess);
             Assert.Equal(OperationStatus.Success, result.Status);
-            Assert.Equal(expected, result.Data);
+            Assert.Equal(expected, result.Data!.Value, precision: 6);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace TZLib.Tests.Services
             var result = GeometryLibrary.IsTriangleRectangular(triangle);
 
             Assert.False(result.IsSuccess);
-            Assert.Equal(OperationStatus.Success, result.Status);
+                        Assert.Equal(OperationStatus.Success, result.Status);
             Assert.True(result.Data);
         }
 

@@ -5,9 +5,12 @@ namespace TZLib.Models
 {
     public class Triangle : IShape
     {
-        public double A { get; set; }
-        public double B { get; set; }
-        public double C { get; set; }
+        private double A { get; }
+        private double B { get; }
+        private double C { get; }
+
+        private double? cachedArea;
+        private bool? cachedIsTriangleRectangular;
 
         public Triangle(double a, double b, double c)
         {
@@ -18,8 +21,15 @@ namespace TZLib.Models
             if (!IsTrianglePossible())
                 return new OperationResult<double?>(false, OperationStatus.InvalidSides, null);
 
-            var p = (A + B + C) / 2; //p - perimeter
+            if (cachedArea.HasValue)
+            {
+                return new OperationResult<double?>(true, OperationStatus.Success, cachedArea.Value);
+            }
+
+            var p = (A + B + C) / 2; //p - полу-периметр;
             var area = Math.Sqrt(p * (p - A) * (p - B) * (p - C));
+            cachedArea = area;
+
 
             return new OperationResult<double?>(true, OperationStatus.Success, area);
         }
@@ -29,7 +39,13 @@ namespace TZLib.Models
             if (!IsTrianglePossible())
                 return new OperationResult<bool?>(false, OperationStatus.InvalidSides, null);
 
+            if (cachedIsTriangleRectangular.HasValue)
+            {
+                return new OperationResult<bool?>(true, OperationStatus.Success, cachedIsTriangleRectangular.Value);
+            }
+
             var isTriangleRectangular = CalculateIsTreangleRectangular();
+            cachedIsTriangleRectangular = isTriangleRectangular;
 
             return new OperationResult<bool?>(true, OperationStatus.Success, isTriangleRectangular);
         }
